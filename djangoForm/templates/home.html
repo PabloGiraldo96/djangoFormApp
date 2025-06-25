@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Login</title>
+</head>
+
+<body
+	style="display:flex; justify-content:center; align-items:center; height:100vh; background-color:#eee; font-family: Lucida Sans;">
+
+	<div style="background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1); width:300px;">
+		<h2 style="text-align:center; ">Iniciar sesión</h2>
+		<form id="loginForm">
+			<input type="text" id="username" placeholder="Usuario" required
+				style="width:100%; padding:8px; margin-top:10px;">
+			<input type="password" id="password" placeholder="Contraseña" required
+				style="width:100%; padding:8px; margin-top:10px;">
+			<button type="submit"
+				style="width:100%; margin-top:15px; background:#28a745; color:white; padding:10px;">Ingresar</button>
+		</form>
+		<p id="mensaje" style="text-align:center; margin-top:10px;"></p>
+	</div>
+
+	<script>
+		document.getElementById("loginForm").addEventListener("submit", function (e) {
+			e.preventDefault();
+
+			const datos = {
+				username: document.getElementById("username").value,
+				password: document.getElementById("password").value
+			};
+
+			fetch("/api/inside/", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(datos)
+			})
+				.then(response => response.json())
+				.then(data => {
+					const mensaje = document.getElementById("mensaje");
+					if (data.success) {
+						mensaje.style.color = "green";
+						mensaje.innerText = data.message;
+						setTimeout(() => window.location.href = "/inside/", 1000);
+					} else {
+						mensaje.style.color = "red";
+						mensaje.innerText = data.message;
+					}
+				});
+		});
+	</script>
+
+</body>
+
+</html>
